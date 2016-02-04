@@ -13,7 +13,7 @@ public class Test {
 			case 6: prog6(); break;
 			case 7: prog7(); break;
 			case 8: prog8(); break;
-			case 9: prog9(); break;
+			case 10: prog10(); break;
 			default:
 		}
 	}
@@ -87,13 +87,14 @@ public class Test {
 		System.out.println(a);
 	}
 	
-	public static void prog9() {
-		int A = 0;
-		int a = 5;
+	public static void prog10() {
+		int A = 1;
+		int a = 2;
+		int numItems = 0;
+		int NUMITEMS = 1;
+		a += A;
 		System.out.println(A);
 		System.out.println(a);
-		A += "hello";
-		System.out.println(A);
-		System.out.println(a);
+		System.out.println(numItems);
 	}
 }

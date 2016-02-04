@@ -87,6 +87,7 @@ public class Main {
 	* creates or updates the appropriate variable in the HashMap of variables
 	*
 	* @param tokens a String array of tokens from the assignment statement under analysis
+	* @param lineNum the line number of this statement
 	**/
 	public static void analyzeAssignment(String[] tokens, int lineNum) {
 		// assignment statements
@@ -107,24 +108,48 @@ public class Main {
 			
 		}
 		
+		int newType = findType(newValue);
+		
+		// If the variable is already declared and we are trying to assign a new
+		// value through (+|-|*)=, we need to make sure the types are compatible
+		if(vars.containsKey(varName)) {
+			int oldType = findType(vars.get(varName));
+			if(!stmt.equals("=") && newType != oldType) {
+				System.out.println("RUNTIME ERROR: line " + lineNum);
+				System.exit(0);
+			}
+		}	
+		
 		// check to see what kind of statement we have (+=, -=, *=, =)
-		// and perform the appropriate operation
+		// and perform the appropriate operation, updating newValue
+		// with the new value to store
 		// TODO: only += works for Strings as well
 		switch(stmt) {
 			case "+=": 
-				if(findType(newValue) == 0) {
+				if(newType == 0) {
 					String string1 = stripQuotes(vars.get(varName));
 					String string2 = stripQuotes(newValue);
-					newValue = string1 + string2;
+					// We need to put the quotes back on, since I use quotes as a flag for a String
+					newValue = "\"" + string1 + string2 + "\"";
 				} else {
 					newValue = (Integer.parseInt(vars.get(varName)) + Integer.parseInt(newValue)) + "";
 				}							
 				break;
 			case "-=":
-				newValue = (Integer.parseInt(vars.get(varName)) - Integer.parseInt(newValue)) + "";
+				if(newType == 0) {
+					System.out.println("RUNTIME ERROR: line " + lineNum);
+					System.exit(0);
+				} else {
+					newValue = (Integer.parseInt(vars.get(varName)) - Integer.parseInt(newValue)) + "";
+				}		
 				break;
 			case "*=":
-				newValue = (Integer.parseInt(vars.get(varName)) * Integer.parseInt(newValue)) + "";
+				if(newType == 0) {
+					System.out.println("RUNTIME ERROR: line " + lineNum);
+					System.exit(0);
+				} else {
+					newValue = (Integer.parseInt(vars.get(varName)) * Integer.parseInt(newValue)) + "";
+				}
 				break;
 			default:
 		}
@@ -147,6 +172,7 @@ public class Main {
 		// Get the number of times the loop should execute
 		// this number is now the first character in the line, and
 		// we should remove it and the space that follows 
+		line = line.trim();
 		int loopCond = Integer.parseInt(line.substring(0, 1));
 		line = line.substring(2);
 		
@@ -170,7 +196,7 @@ public class Main {
 				// find end of last ENDFOR and add substring to list
 				int endfor = line.lastIndexOf("ENDFOR");
 				// add the statement from the space after the FOR up until the ENDFOR
-				stmts.add(line.substring(3, endfor));
+				stmts.add(line.substring(0, endfor + "ENDFOR".length()));
 				// we want everything after the ENDFOR
 				line = line.substring(endfor + "ENDFOR".length());
 			} else {
