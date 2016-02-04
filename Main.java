@@ -17,14 +17,12 @@ public class Main {
 		    String line;
 		    while((line = br.readLine()) != null) {
 				lineNum++;
-				parseStmt(line, lineNum);
+				parseStmt(line);
 		    }
 			
 		}catch (Exception e) {
 			System.out.println(e);
-		}
-		
-		
+		}	
 	}
 	
 	/**
@@ -32,16 +30,16 @@ public class Main {
 	* statement it is, and calls the appropriate method
 	* @param line the String of source code to analyze 
 	**/
-	public static void parseStmt(String line, int lineNum) {
+	public static void parseStmt(String line) {
 		String[] tokens = line.split(" ");
 		int numTokens = tokens.length;
 		
 		if(numTokens == 3) {
-			analyzePrint(tokens, lineNum);			
+			analyzePrint(tokens);			
 		} else if (numTokens == 4) {
-			analyzeAssignment(tokens, lineNum);			
+			analyzeAssignment(tokens);			
 		} else {
-			analyzeFor(line, lineNum);
+			analyzeFor(line);
 		}
 	}
 	
@@ -50,9 +48,8 @@ public class Main {
 	* the specified value or variable to the console.
 	*
 	* @param tokens a String array of tokens from the PRINT line we are analyzing
-	* @param lineNum the line number of the line we are analyzing
 	**/
-	public static void analyzePrint(String[] tokens, int lineNum) {
+	public static void analyzePrint(String[] tokens) {
 		// Print statements have 3 tokens
 		// PRINT [varName, number, or string] ;
 		String varToPrint = tokens[1];
@@ -63,8 +60,7 @@ public class Main {
 		if(findType(varToPrint) == 2) {
 			// If the variable has no value, throw an error
 			if(!vars.containsKey(varToPrint)) {
-				System.out.println("RUNTIME ERROR: line " + lineNum);
-				System.exit(0);
+				throwError();
 			} else {
 				varToPrint = vars.get(varToPrint);
 			}
@@ -87,9 +83,8 @@ public class Main {
 	* creates or updates the appropriate variable in the HashMap of variables
 	*
 	* @param tokens a String array of tokens from the assignment statement under analysis
-	* @param lineNum the line number of this statement
 	**/
-	public static void analyzeAssignment(String[] tokens, int lineNum) {
+	public static void analyzeAssignment(String[] tokens) {
 		// assignment statements
 		// varName (+|-|*)= newValue ;
 		String varName = tokens[0];
@@ -102,8 +97,7 @@ public class Main {
 			if(vars.containsKey(newValue)) {
 				newValue = vars.get(newValue);
 			} else {
-				System.out.println("RUNTIME ERROR: line " + lineNum);
-				System.exit(0);
+				throwError();
 			}
 			
 		}
@@ -115,8 +109,7 @@ public class Main {
 		if(vars.containsKey(varName)) {
 			int oldType = findType(vars.get(varName));
 			if(!stmt.equals("=") && newType != oldType) {
-				System.out.println("RUNTIME ERROR: line " + lineNum);
-				System.exit(0);
+				throwError();
 			}
 		}	
 		
@@ -136,17 +129,17 @@ public class Main {
 				}							
 				break;
 			case "-=":
+				// This operation is not allowed for Strings
 				if(newType == 0) {
-					System.out.println("RUNTIME ERROR: line " + lineNum);
-					System.exit(0);
+					throwError();
 				} else {
 					newValue = (Integer.parseInt(vars.get(varName)) - Integer.parseInt(newValue)) + "";
 				}		
 				break;
 			case "*=":
+				// This operation is not allowed for Strings
 				if(newType == 0) {
-					System.out.println("RUNTIME ERROR: line " + lineNum);
-					System.exit(0);
+					throwError();
 				} else {
 					newValue = (Integer.parseInt(vars.get(varName)) * Integer.parseInt(newValue)) + "";
 				}
@@ -161,9 +154,8 @@ public class Main {
 	* Tokenizes a FOR loop statement and completes the appropriate action
 	* 
 	* @param line the String containing the FOR statement
-	* @param lineNum the line number of the FOR statement
 	**/
-	public static void analyzeFor(String line, int lineNum) {
+	public static void analyzeFor(String line) {
 		// strip off FOR and ENDFOR
 		// remove leading and trailing whitespace, if any
 		line = line.trim();
@@ -177,7 +169,7 @@ public class Main {
 		line = line.substring(2);
 		
 		for(int i = 0; i < loopCond; i++) {
-			executeStmtList(line, lineNum);
+			executeStmtList(line);
 		}
 	}
 	
@@ -187,7 +179,7 @@ public class Main {
 	*
 	* @param line the line containing the list of statements to parse and execute
 	**/
-	public static void executeStmtList(String line, int lineNum) {
+	public static void executeStmtList(String line) {
 		// Build an ArrayList(?) of statements, then 
 		ArrayList<String> stmts = new ArrayList<String>();
 		while(line.length() > 0) {
@@ -207,7 +199,7 @@ public class Main {
 		}
 		// use a for each loop to execute each statement
 		for(String s : stmts) {
-			parseStmt(s, lineNum);
+			parseStmt(s);
 		}
 	}
 	
@@ -233,8 +225,24 @@ public class Main {
 		}
 	}
 	
+	/**
+	* Strips the first and last characters of a string, which in this case
+	* are the quotes stored in the HashMap to indicate the element
+	* is a String
+	*
+	* @param str the String off which to strip quotes
+	* @return a substring of str without the first and last characters
+	**/
 	public static String stripQuotes(String str) {
 		return str.substring(1, str.length() - 1);
+	}
+	
+	/**
+	* Prints a runtime error and exits the program
+	**/
+	public static void throwError() {
+		System.out.println("RUNTIME ERROR: line " + lineNum);
+		System.exit(0);
 	}
 
 }
