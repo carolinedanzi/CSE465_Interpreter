@@ -1,3 +1,12 @@
+/**
+* Caroline Danzi
+* CSE 465 Comparative Programming Languages
+* Dr. Zmuda
+*
+* This program interprets a simple language that contains assignment statements,
+* print statements, and for loops.  
+**/
+
 import java.io.*;
 import java.util.HashMap;
 import java.util.ArrayList;
