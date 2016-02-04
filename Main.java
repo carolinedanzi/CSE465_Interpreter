@@ -162,11 +162,12 @@ public class Main {
 		line = line.substring(4, line.length() - 7);
 		
 		// Get the number of times the loop should execute
-		// this number is now the first character in the line, and
+		// this number is now the first token in the line, and
 		// we should remove it and the space that follows 
 		line = line.trim();
-		int loopCond = Integer.parseInt(line.substring(0, 1));
-		line = line.substring(2);
+		int spaceAfterNum = line.indexOf(" ");
+		int loopCond = Integer.parseInt(line.substring(0, spaceAfterNum));
+		line = line.substring(spaceAfterNum);
 		
 		for(int i = 0; i < loopCond; i++) {
 			executeStmtList(line);
