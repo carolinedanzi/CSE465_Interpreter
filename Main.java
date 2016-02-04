@@ -1,10 +1,19 @@
 /**
-* Caroline Danzi
+* @author Caroline Danzi
 * CSE 465 Comparative Programming Languages
 * Dr. Zmuda
 *
 * This program interprets a simple language that contains assignment statements,
-* print statements, and for loops.  
+* print statements, and for loops.  Print statments are of the form PRINT A ; where
+* A is the thing to print (variable, int, or String).  Assignment statements have the 
+* form A = B ; A += B ; A -= B ; A *= B ; where only = and += work for Strings.
+* For loops have the form FOR X <STATEMENT> ENDFOR, where <STATEMENT> could
+* be a print, assignment, or for statement, and X is the number of times to loop.
+*   
+* I worked with Alex Gartner to come up with a possible algorithm for interpreting
+* nested for loops, and also used Dr. Zmuda's suggestions of counting the number
+* of tokens to determine the type of statement and his suggestion of mutually
+* recursive functions for nested for loops.  
 **/
 
 import java.io.*;

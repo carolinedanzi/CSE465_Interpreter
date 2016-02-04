@@ -14,8 +14,17 @@ public class Test {
 			case 7: prog7(); break;
 			case 8: prog8(); break;
 			case 10: prog10(); break;
+			case 4: prog4(); break;
 			default:
 		}
+	}
+	
+	public static void prog4() {
+		String a = "X";
+		for(int i = 0; i < 4; i++) {
+			a += a;
+		}
+		System.out.println(a);
 	}
 	
 	public static void prog5() {
