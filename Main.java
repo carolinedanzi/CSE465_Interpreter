@@ -34,6 +34,19 @@ public class Main {
 		String[] tokens = line.split(" ");
 		int numTokens = tokens.length;
 		
+		// If the number of tokens is greater than 4 (assignment length), we may have a string with
+		// spaces.  We should check the third token (new value for assignments) to see if it is a String
+		if(numTokens > 4 && tokens[2].contains("\"")) {
+			String[] oldTokens = tokens;
+			tokens = new String[4];
+			tokens[0] = oldTokens[0];
+			tokens[1] = oldTokens[1];
+			tokens[2] = line.substring(line.indexOf("\""), line.lastIndexOf("\"") + 1);
+			tokens[3] = oldTokens[oldTokens.length - 1];
+			// The number of tokens has changed
+			numTokens = tokens.length;
+		}
+		
 		if(numTokens == 3) {
 			analyzePrint(tokens);			
 		} else if (numTokens == 4) {
