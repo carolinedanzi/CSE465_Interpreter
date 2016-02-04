@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 public class Main {
 	
@@ -162,8 +163,26 @@ public class Main {
 	**/
 	public static void executeStmtList(String line, int lineNum) {
 		// Build an ArrayList(?) of statements, then 
-		
+		ArrayList<String> stmts = new ArrayList<String>();
+		while(line.length() > 0) {
+			line = line.trim();
+			if(line.startsWith("FOR")) {
+				// find end of last ENDFOR and add substring to list
+				int endfor = line.lastIndexOf("ENDFOR");
+				// add the statement from the space after the FOR up until the ENDFOR
+				stmts.add(line.substring(3, endfor));
+				// we want everything after the ENDFOR
+				line = line.substring(endfor + "ENDFOR".length());
+			} else {
+				int semicolon = line.indexOf(";");
+				stmts.add(line.substring(0, semicolon + 1));
+				line = line.substring(semicolon + 1);
+			}
+		}
 		// use a for each loop to execute each statement
+		for(String s : stmts) {
+			parseStmt(s, lineNum);
+		}
 	}
 	
 	/**
