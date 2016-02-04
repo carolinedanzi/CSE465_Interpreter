@@ -40,7 +40,7 @@ public class Main {
 		} else if (numTokens == 4) {
 			analyzeAssignment(tokens, lineNum);			
 		} else {
-			analyzeFor(tokens);
+			analyzeFor(line, lineNum);
 		}
 	}
 	
@@ -134,10 +134,36 @@ public class Main {
 	/**
 	* Tokenizes a FOR loop statement and completes the appropriate action
 	* 
-	* @param tokens a String array of tokens for this FOR loop statement
+	* @param line the String containing the FOR statement
+	* @param lineNum the line number of the FOR statement
 	**/
-	public static void analyzeFor(String[] tokens) {
-		// possible recursion for nested for loops?
+	public static void analyzeFor(String line, int lineNum) {
+		// strip off FOR and ENDFOR
+		// remove leading and trailing whitespace, if any
+		line = line.trim();
+		line = line.substring(4, line.length() - 7);
+		
+		// Get the number of times the loop should execute
+		// this number is now the first character in the line, and
+		// we should remove it and the space that follows 
+		int loopCond = Integer.parseInt(line.substring(0, 1));
+		line = line.substring(2);
+		
+		for(int i = 0; i < loopCond; i++) {
+			executeStmtList(line, lineNum);
+		}
+	}
+	
+	/**
+	* Splits a statement list into the different statements, and calls
+	* parseStmt to execute each statement.
+	*
+	* @param line the line containing the list of statements to parse and execute
+	**/
+	public static void executeStmtList(String line, int lineNum) {
+		// Build an ArrayList(?) of statements, then 
+		
+		// use a for each loop to execute each statement
 	}
 	
 	/**
