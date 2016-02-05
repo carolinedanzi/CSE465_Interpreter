@@ -13,7 +13,8 @@
 * I worked with Alex Gartner to come up with a possible algorithm for interpreting
 * nested for loops, and also used Dr. Zmuda's suggestions of counting the number
 * of tokens to determine the type of statement and his suggestion of mutually
-* recursive functions for nested for loops.  
+* recursive functions for nested for loops.  I also looked at Stack Overflow for help
+* with reading in a file line by line, because apparently I do not remember CSE 271.  
 **/
 
 import java.io.*;
@@ -32,6 +33,7 @@ public class Main {
 		    BufferedReader br = new BufferedReader(new FileReader(filename));
 
 			// read each line, one at a time, and interpret it
+			// used Stack Overflow for syntax help
 		    String line;
 		    while((line = br.readLine()) != null) {
 				lineNum++;
@@ -52,8 +54,10 @@ public class Main {
 		String[] tokens = line.split(" ");
 		int numTokens = tokens.length;
 		
-		// If the number of tokens is greater than 4 (assignment length), we may have a string with
-		// spaces.  We should check the third token (new value for assignments) to see if it is a String
+		// If we have more than 4 tokens but the second to last one has a closing
+		// quote, we have a String with spaces in it.  The assignment statement
+		// should be only four tokens, but since the String has spaces the line was
+		// split into more than four tokens.  
 		if(numTokens > 4 && tokens[2].contains("\"")) {
 			String[] oldTokens = tokens;
 			tokens = new String[4];
@@ -97,11 +101,9 @@ public class Main {
 			}
 		}
 		
-		// If the variable we wish to print is a String, we need to
-		// remove the quotes
-		// Note: If we found the type above, it may have changed
-		// if this was a variable that stored a string, which is why
-		// I call findType again
+		// If the variable we wish to print is a String, we need to remove the quotes
+		// Note: If we found the type above, it may have changed if this was a
+		// variable that stored a string, which is why I call findType again
 		if (findType(varToPrint) == 0) {
 			varToPrint = stripQuotes(varToPrint);
 		}		
@@ -147,7 +149,6 @@ public class Main {
 		// check to see what kind of statement we have (+=, -=, *=, =)
 		// and perform the appropriate operation, updating newValue
 		// with the new value to store
-		// TODO: only += works for Strings as well
 		switch(stmt) {
 			case "+=": 
 				if(newType == 0) {
@@ -212,18 +213,20 @@ public class Main {
 	* @param line the line containing the list of statements to parse and execute
 	**/
 	public static void executeStmtList(String line) {
-		// Build an ArrayList(?) of statements, then 
 		ArrayList<String> stmts = new ArrayList<String>();
+		
 		while(line.length() > 0) {
 			line = line.trim();
 			if(line.startsWith("FOR")) {
-				// find end of last ENDFOR and add substring to list
+				// find index of last ENDFOR and add substring from FOR to ENDFOR to list
 				int endfor = line.lastIndexOf("ENDFOR");
-				// add the statement from the space after the FOR up until the ENDFOR
+				// add the statement from the FOR until the ENDFOR
 				stmts.add(line.substring(0, endfor + "ENDFOR".length()));
 				// we want everything after the ENDFOR
 				line = line.substring(endfor + "ENDFOR".length());
 			} else {
+				// Otherwise, we have a normal statement that ends in a semicolon
+				// Add the statement (including the semicolon) to the list then remove it
 				int semicolon = line.indexOf(";");
 				stmts.add(line.substring(0, semicolon + 1));
 				line = line.substring(semicolon + 1);
@@ -263,7 +266,7 @@ public class Main {
 	* is a String
 	*
 	* @param str the String off which to strip quotes
-	* @return a substring of str without the first and last characters
+	* @return the substring of str without the first and last characters
 	**/
 	public static String stripQuotes(String str) {
 		return str.substring(1, str.length() - 1);

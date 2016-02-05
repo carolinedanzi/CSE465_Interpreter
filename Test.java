@@ -9,6 +9,7 @@ public class Test {
 		int choice = in.nextInt();
 		
 		switch(choice) {
+			case 1: testprog(); break;
 			case 5: prog5(); break;
 			case 6: prog6(); break;
 			case 7: prog7(); break;
@@ -17,6 +18,20 @@ public class Test {
 			case 4: prog4(); break;
 			default:
 		}
+	}
+	
+	public static void testprog() {
+		int a = 0;
+		String b = "|*| ";
+		for(int i = 0; i < 1000; i++) {
+			a += 27;
+			b += ".";
+			for(int j = 0; j < 1000; j++) {
+				a -= 2;
+			}
+		}
+		System.out.println(a);
+		System.out.println(b);
 	}
 	
 	public static void prog4() {
