@@ -34,11 +34,14 @@ public class Main {
 
 			// read each line, one at a time, and interpret it
 			// used Stack Overflow for syntax help
+			//long start = System.currentTimeMillis();
 		    String line;
 		    while((line = br.readLine()) != null) {
 				lineNum++;
 				parseStmt(line);
 		    }
+			//long end = System.currentTimeMillis();
+			//System.out.println("running time: " + (end - start));
 			
 		}catch (Exception e) {
 			System.out.println(e);
@@ -77,7 +80,10 @@ public class Main {
 		} else if (numTokens == 4) {
 			analyzeAssignment(tokens);			
 		} else {
-			analyzeFor(line);
+			// If we do not have a blank line, it is a FOR loop
+			if(line.length() != 0) {
+				analyzeFor(line);
+			}
 		}
 	}
 	

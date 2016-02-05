@@ -9,6 +9,7 @@ public class Test {
 		int choice = in.nextInt();
 		
 		switch(choice) {
+			case 0: cost(); break;
 			case 1: testprog(); break;
 			case 5: prog5(); break;
 			case 6: prog6(); break;
@@ -16,11 +17,64 @@ public class Test {
 			case 8: prog8(); break;
 			case 10: prog10(); break;
 			case 4: prog4(); break;
+			case 11: test3(); break;
 			default:
 		}
 	}
 	
+	public static void test3() {
+		long start = System.currentTimeMillis();
+		String str = "hello";
+		int a = 2;
+		for(int i = 0; i < 10000; i++) {
+			str += ".";
+		}
+		for(int i = 0; i < 100; i++) {
+			a += 2;
+		}
+		
+		for(int i = 0; i < 10000; i++) {
+			str += ".";
+		}
+		for(int i = 0; i < 100; i++) {
+			a += 2;
+		}
+		
+		for(int i = 0; i < 10000; i++) {
+			str += ".";
+		}
+		for(int i = 0; i < 100; i++) {
+			a += 2;
+		}
+		
+		for(int i = 0; i < 10000; i++) {
+			str += ".";
+		}
+		for(int i = 0; i < 100; i++) {
+			a += 2;
+		}
+		System.out.println(a);
+		long end = System.currentTimeMillis();
+		System.out.println("running time: " + (end - start));
+	}
+	
+	public static void cost() {
+		long start = System.currentTimeMillis();
+		int numItems = 1000;
+		int cost = 2;
+		for(int i = 0; i < 1000; i++) {
+			numItems -= 2;
+			for(int k = 0; k < 500; k++) {
+				cost = cost*2;
+			}
+		}
+		System.out.println(numItems);
+		long end = System.currentTimeMillis();
+		System.out.println("running time: " + (end - start));
+	}
+	
 	public static void testprog() {
+		long start = System.currentTimeMillis();
 		int a = 0;
 		String b = "|*| ";
 		for(int i = 0; i < 1000; i++) {
@@ -31,7 +85,8 @@ public class Test {
 			}
 		}
 		System.out.println(a);
-		System.out.println(b);
+		long end = System.currentTimeMillis();
+		System.out.println("running time: " + (end - start));
 	}
 	
 	public static void prog4() {
