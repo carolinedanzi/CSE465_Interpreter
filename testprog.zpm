@@ -1,4 +1,4 @@
 A = 0 ;
 B = "|*| "
 FOR 1000 A += 27 ; B += "." ; FOR 1000 A -= 2 ; ENDFOR ENDFOR
-PRINT A ;
+PRINT 	 	   A         ;
