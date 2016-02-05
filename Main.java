@@ -51,7 +51,10 @@ public class Main {
 	* @param line the String of source code to analyze 
 	**/
 	public static void parseStmt(String line) {
-		String[] tokens = line.split(" ");
+		// Used http://www.tutorialspoint.com/java/lang/string_split.htm for help 
+		// with Java regex formatting in split method.  This will now split around any
+		// amount of whitespace in between tokens.  
+		String[] tokens = line.split("\\s+");
 		int numTokens = tokens.length;
 		
 		// If we have more than 4 tokens but the second to last one has a closing
@@ -87,28 +90,32 @@ public class Main {
 	public static void analyzePrint(String[] tokens) {
 		// Print statements have 3 tokens
 		// PRINT [varName, number, or string] ;
-		String varToPrint = tokens[1];
-
+		String toPrint = tokens[1];
+		// If we are printing a variable, we will add a prefix of the variable name
+		String prefix = ""; 
 		
 		// if the thing we are printing is a variable, then
 		// find its value in the HashMap first
-		if(findType(varToPrint) == 2) {
+		if(findType(toPrint) == 2) {
 			// If the variable has no value, throw an error
-			if(!vars.containsKey(varToPrint)) {
+			if(!vars.containsKey(toPrint)) {
 				throwError();
 			} else {
-				varToPrint = vars.get(varToPrint);
+				// If we are printing a variable, we should print the 
+				// variable name first and then the value
+				prefix = toPrint + "=";
+				toPrint = vars.get(toPrint);
 			}
 		}
 		
 		// If the variable we wish to print is a String, we need to remove the quotes
 		// Note: If we found the type above, it may have changed if this was a
 		// variable that stored a string, which is why I call findType again
-		if (findType(varToPrint) == 0) {
-			varToPrint = stripQuotes(varToPrint);
+		if (findType(toPrint) == 0) {
+			toPrint = stripQuotes(toPrint);
 		}		
 		
-		System.out.println(varToPrint);
+		System.out.println(prefix + toPrint);
 	}
 	
 	/**
